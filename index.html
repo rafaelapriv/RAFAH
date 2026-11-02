@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7fa">
+  <title>Verificação de acesso</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #f5f7fa;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #202124;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 390px;
+      padding: 28px 24px;
+      background: #fff;
+      border: 1px solid #e2e5e9;
+      border-radius: 14px;
+      box-shadow: 0 5px 22px rgba(0, 0, 0, .06);
+      animation: appear .5s ease both;
+    }
+
+    .shield {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e8f5ed;
+      border-radius: 50%;
+      font-size: 26px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 23px;
+      letter-spacing: -.4px;
+    }
+
+    .description {
+      margin: 0 0 24px;
+      color: #687078;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .verify {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 14px;
+      border: 1px solid #d9dde2;
+      border-radius: 9px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .verify:hover {
+      border-color: #aab3bc;
+    }
+
+    .checkbox {
+      width: 25px;
+      height: 25px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #9299a1;
+      border-radius: 4px;
+      background: #fff;
+      transition: all .25s ease;
+    }
+
+    .verify-text {
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .verify small {
+      display: block;
+      margin-top: 3px;
+      color: #747b83;
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .verify.loading .checkbox {
+      border-color: #16834a;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    .verify.done {
+      border-color: #16834a;
+      background: #f5fbf7;
+    }
+
+    .verify.done .checkbox {
+      background: #16834a;
+      border-color: #16834a;
+      animation: pop .3s ease;
+    }
+
+    .check {
+      display: none;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .verify.done .check {
+      display: block;
+    }
+
+    .status {
+      display: none;
+      margin-top: 17px;
+      text-align: center;
+      color: #16834a;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status.visible {
+      display: block;
+      animation: appear .35s ease both;
+    }
+
+    .continue {
+      display: none;
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #16834a;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+
+    .continue.visible {
+      display: block;
+      animation: appear .4s ease both;
+    }
+
+    .continue:hover {
+      background: #116b3b;
+      transform: translateY(-1px);
+    }
+
+    .footer {
+      margin-top: 23px;
+      padding-top: 16px;
+      border-top: 1px solid #edf0f2;
+      text-align: center;
+      color: #858b92;
+      font-size: 11px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(.65); }
+      75% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="shield" aria-hidden="true">🛡️</div>
+
+    <h1>Verificação de acesso</h1>
+
+    <p class="description">
+      Confirme que deseja continuar para acessar o conteúdo.
+    </p>
+
+    <div
+      class="verify"
+      id="verify"
+      role="checkbox"
+      aria-checked="false"
+      tabindex="0"
+    >
+      <span class="checkbox" aria-hidden="true">
+        <span class="check">✓</span>
+      </span>
+
+      <span class="verify-text">
+        Confirmar e continuar
+        <small>Toque no quadradinho para prosseguir</small>
+      </span>
+    </div>
+
+    <div class="status" id="status" role="status">
+      ✓ Confirmação concluída!
+    </div>
+
+    <a
+      class="continue"
+      id="continue"
+      href="https://www.crownbot.com.br/rafaela"
+      rel="noopener"
+    >
+      ACESSAR CONTEÚDO →
+    </a>
+
+    <div class="footer">
+      Confirmação de acesso · Continue quando estiver pronto
+    </div>
+  </main>
+
+  <script>
+    const verify = document.getElementById("verify");
+    const status = document.getElementById("status");
+    const continueBtn = document.getElementById("continue");
+
+    let completed = false;
+    let busy = false;
+
+    function confirmAccess() {
+      if (completed || busy) return;
+
+      busy = true;
+      verify.classList.add("loading");
+
+      setTimeout(() => {
+        verify.classList.remove("loading");
+        verify.classList.add("done");
+        verify.setAttribute("aria-checked", "true");
+
+        status.classList.add("visible");
+        continueBtn.classList.add("visible");
+
+        completed = true;
+        busy = false;
+      }, 650);
+    }
+
+    verify.addEventListener("click", confirmAccess);
+
+    verify.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        confirmAccess();
+      }
+    });
+  </script>
+</body>
+</html>
