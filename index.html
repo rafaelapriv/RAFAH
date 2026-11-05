@@ -4,285 +4,228 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5f7fa">
+  <meta name="theme-color" content="#f00070">
   <title>Verificação de acesso</title>
 
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --pink: #ff1688;
+      --hot: #f00070;
+      --deep: #b9004f;
+      --ink: #2a1721;
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: #f5f7fa;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--ink);
       font-family: Arial, Helvetica, sans-serif;
-      color: #202124;
+      background:
+        radial-gradient(ellipse at 12% 12%, rgba(255,255,255,.72), transparent 38%),
+        radial-gradient(ellipse at 88% 82%, rgba(255,35,145,.38), transparent 35%),
+        linear-gradient(145deg, #ffe8f3 0%, #ffadd4 42%, #ff69b2 100%);
     }
 
     .card {
-      width: 100%;
-      max-width: 390px;
-      padding: 28px 24px;
-      background: #fff;
-      border: 1px solid #e2e5e9;
-      border-radius: 14px;
-      box-shadow: 0 5px 22px rgba(0, 0, 0, .06);
-      animation: appear .5s ease both;
+      width: min(100%, 440px);
+      padding: 34px 28px 30px;
+      border: 1px solid rgba(255,255,255,.88);
+      border-radius: 25px;
+      background: rgba(255,255,255,.91);
+      box-shadow: 0 22px 65px rgba(169,26,88,.16),
+                  0 4px 14px rgba(169,26,88,.07);
+      text-align: center;
+      backdrop-filter: blur(12px);
     }
 
     .shield {
-      width: 52px;
-      height: 52px;
-      margin: 0 auto 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #e8f5ed;
+      width: 62px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
       border-radius: 50%;
-      font-size: 26px;
+      color: white;
+      font-size: 29px;
+      background: linear-gradient(135deg, #ff5cac, #f00070);
+      box-shadow: 0 8px 20px rgba(233,30,104,.22);
     }
 
     h1 {
-      margin: 0 0 10px;
-      text-align: center;
-      font-size: 23px;
-      letter-spacing: -.4px;
+      margin: 0 0 12px;
+      font-size: clamp(25px, 6vw, 29px);
+      letter-spacing: -.7px;
+      line-height: 1.15;
     }
 
-    .description {
-      margin: 0 0 24px;
-      color: #687078;
-      text-align: center;
-      font-size: 14px;
+    .intro {
+      margin: 0 auto 27px;
+      max-width: 330px;
+      color: #887680;
+      font-size: 16px;
       line-height: 1.6;
     }
 
-    .verify {
-      min-height: 74px;
+    .confirm {
       display: flex;
       align-items: center;
-      gap: 13px;
-      padding: 14px;
-      border: 1px solid #d9dde2;
-      border-radius: 9px;
-      background: #fff;
+      gap: 15px;
+      padding: 18px 16px;
+      border: 1px solid #f0c7d9;
+      border-radius: 15px;
+      background: linear-gradient(110deg, #fff 0%, #fff5fa 100%);
+      text-align: left;
       cursor: pointer;
-      transition: border-color .2s, background .2s;
-      -webkit-tap-highlight-color: transparent;
     }
 
-    .verify:hover {
-      border-color: #aab3bc;
+    .confirm:has(input:checked) {
+      border-color: #ed4b91;
+      box-shadow: 0 0 0 3px rgba(237,36,107,.09);
     }
 
-    .checkbox {
-      width: 25px;
-      height: 25px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #9299a1;
-      border-radius: 4px;
-      background: #fff;
-      transition: all .25s ease;
+    .confirm input {
+      appearance: none;
+      flex: 0 0 27px;
+      width: 27px;
+      height: 27px;
+      margin: 0;
+      border: 2px solid #c6aab7;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      position: relative;
     }
 
-    .verify-text {
-      font-size: 15px;
-      line-height: 1.4;
-      font-weight: 600;
+    .confirm input:checked {
+      border-color: var(--hot);
+      background: linear-gradient(135deg,var(--pink),var(--deep));
     }
 
-    .verify small {
-      display: block;
-      margin-top: 3px;
-      color: #747b83;
-      font-size: 11px;
-      font-weight: 400;
-    }
-
-    .verify.loading .checkbox {
-      border-color: #16834a;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-    }
-
-    .verify.done {
-      border-color: #16834a;
-      background: #f5fbf7;
-    }
-
-    .verify.done .checkbox {
-      background: #16834a;
-      border-color: #16834a;
-      animation: pop .3s ease;
-    }
-
-    .check {
-      display: none;
+    .confirm input:checked::after {
+      content: "✓";
+      position: absolute;
+      inset: -1px 0 0;
       color: white;
-      font-size: 17px;
-      font-weight: bold;
-    }
-
-    .verify.done .check {
-      display: block;
-    }
-
-    .status {
-      display: none;
-      margin-top: 17px;
+      font-size: 20px;
+      font-weight: 700;
       text-align: center;
-      color: #16834a;
-      font-size: 13px;
-      font-weight: 600;
     }
 
-    .status.visible {
+    .confirm strong {
       display: block;
-      animation: appear .35s ease both;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .confirm small {
+      display: block;
+      color: #9b8791;
+      font-size: 13px;
+      line-height: 1.4;
     }
 
     .continue {
-      display: none;
       width: 100%;
+      min-height: 54px;
       margin-top: 18px;
-      padding: 15px 18px;
-      border: none;
-      border-radius: 8px;
-      background: #16834a;
-      color: #fff;
-      font-size: 15px;
+      border: 0;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(100deg,#ff3299 0%,#f00070 52%,#bd004e 100%);
+      box-shadow: 0 10px 22px rgba(220,25,96,.23);
+      font-size: 16px;
       font-weight: 700;
-      text-align: center;
-      text-decoration: none;
       cursor: pointer;
-      transition: background .2s, transform .2s;
+      transition: transform .18s, opacity .18s;
     }
 
-    .continue.visible {
-      display: block;
-      animation: appear .4s ease both;
+    .continue:disabled {
+      opacity: .48;
+      cursor: not-allowed;
+      box-shadow: none;
     }
 
-    .continue:hover {
-      background: #116b3b;
-      transform: translateY(-1px);
+    .continue:not(:disabled):active {
+      transform: translateY(1px) scale(.99);
     }
 
-    .footer {
-      margin-top: 23px;
-      padding-top: 16px;
-      border-top: 1px solid #edf0f2;
-      text-align: center;
-      color: #858b92;
-      font-size: 11px;
+    .foot {
+      margin: 25px 0 0;
+      padding-top: 18px;
+      border-top: 1px solid #f5e5ed;
+      color: #aa98a1;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes pop {
-      0% { transform: scale(.65); }
-      75% { transform: scale(1.15); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes appear {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    @media (max-width: 380px) {
+      .card { padding: 29px 20px 25px; }
     }
   </style>
 </head>
 
 <body>
   <main class="card">
+
     <div class="shield" aria-hidden="true">🛡️</div>
 
     <h1>Verificação de acesso</h1>
 
-    <p class="description">
+    <p class="intro">
       Confirme que deseja continuar para acessar o conteúdo.
     </p>
 
-    <div
-      class="verify"
-      id="verify"
-      role="checkbox"
-      aria-checked="false"
-      tabindex="0"
-    >
-      <span class="checkbox" aria-hidden="true">
-        <span class="check">✓</span>
-      </span>
-
-      <span class="verify-text">
-        Confirmar e continuar
+    <label class="confirm" for="confirmar">
+      <input id="confirmar" type="checkbox">
+      <span>
+        <strong>Confirmar e continuar</strong>
         <small>Toque no quadradinho para prosseguir</small>
       </span>
-    </div>
+    </label>
 
-    <div class="status" id="status" role="status">
-      ✓ Confirmação concluída!
-    </div>
+    <button class="continue" id="continuar" type="button" disabled>
+      🔥 Liberar acesso
+    </button>
 
-    <a
-      class="continue"
-      id="continue"
-      href="https://www.crownbot.com.br/rafaela"
-      rel="noopener"
-    >
-      ACESSAR CONTEÚDO →
-    </a>
-
-    <div class="footer">
+    <p class="foot">
       Confirmação de acesso · Continue quando estiver pronto
-    </div>
+    </p>
+
+    <p id="feedback" role="status" aria-live="polite" hidden
+       style="margin:18px 0 0;color:#d00060;font-size:14px;font-weight:700;line-height:1.5;">
+      🔥 Acesso confirmado! Preparando seu conteúdo exclusivo...
+    </p>
+
   </main>
 
   <script>
-    const verify = document.getElementById("verify");
-    const status = document.getElementById("status");
-    const continueBtn = document.getElementById("continue");
+    const checkbox = document.getElementById('confirmar');
+    const button = document.getElementById('continuar');
 
-    let completed = false;
-    let busy = false;
+    const destination = 'https://www.crownbot.com.br/rafaela';
 
-    function confirmAccess() {
-      if (completed || busy) return;
+    checkbox.addEventListener('change', () => {
+      button.disabled = !checkbox.checked;
+    });
 
-      busy = true;
-      verify.classList.add("loading");
+    button.addEventListener('click', () => {
+      if (checkbox.checked) {
+        button.disabled = true;
+        button.textContent = '🔥 Liberando acesso...';
 
-      setTimeout(() => {
-        verify.classList.remove("loading");
-        verify.classList.add("done");
-        verify.setAttribute("aria-checked", "true");
+        document.getElementById('feedback').hidden = false;
 
-        status.classList.add("visible");
-        continueBtn.classList.add("visible");
-
-        completed = true;
-        busy = false;
-      }, 650);
-    }
-
-    verify.addEventListener("click", confirmAccess);
-
-    verify.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        confirmAccess();
+        window.setTimeout(() => {
+          window.location.href = destination;
+        }, 850);
       }
     });
   </script>
+
 </body>
 </html>
